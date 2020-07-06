@@ -34,6 +34,10 @@ function data = addevent_data(data,ch,ename,type)
 %
 % Updated by Philippe C. Dixon Nov 2017
 % - Bug fix for reaction force check
+% 
+% Updated by Jean-Christophe Hebert July 2020
+% - Added customfirst and customlast functions useful for partionning.
+%   Current values are for IMU_outdoor_process
 
 % Some settings
 %
@@ -48,6 +52,7 @@ if length(ch)==1 && strcmp(ch{1},'all')
 end
 
 ch = setdiff(ch,{'zoosystem'});
+
 
 for i = 1:length(ch)
     
@@ -75,6 +80,18 @@ for i = 1:length(ch)
         case 'last'
             exd = length(yd);
             eyd = yd(exd);
+            
+        case 'customfirst' %to put a first event for partionning different from the absolute first measure
+            exd = 100;
+            eyd = yd(exd);
+            
+        case 'customlast'  %to put a last event for partionning different from the absolute last measure
+            exd = 638;
+            eyd = yd(exd);
+            
+        case 'mean'   
+            eyd = mean(yd);
+            exd = 1;
             
         case 'max'
             [eyd,exd] = max(yd);
@@ -145,7 +162,7 @@ for i = 1:length(ch)
              else
                  exd = exd_l;
              end
-         
+                         
             
         otherwise
             error(['event type: ',type,' does not exist'])
